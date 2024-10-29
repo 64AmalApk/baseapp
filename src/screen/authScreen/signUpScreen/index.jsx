@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-nativ
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors } from '../../../resources';
 import { moderateScale, textScale, moderateScaleVertical, ROUTE_NAME } from '../../../helper';
-import { navigationService } from '../../../services';
 
 const SignUpScreen = ({navigation}) => {
   const [name, setName] = useState('');
@@ -13,7 +12,7 @@ const SignUpScreen = ({navigation}) => {
 
   const handleSignUp = () => {
     // Handle sign up logic here
-    navigationService.navigate(ROUTE_NAME.SIGNIN)
+    navigation.navigate(ROUTE_NAME.SIGNIN)
   };
 
   return (

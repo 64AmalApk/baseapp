@@ -3,15 +3,15 @@ import axiosInstance from "./axiosInstance";
 import { API_URL } from "../config";
 const authService = {
   signIn,
-  signUp,
+  getAllTask,
 };
 
 
 async function signIn(data) {
-  return await axiosInstance.post(API_URL.AUTH + API_URL.SIGN_IN, data);
+  return await axiosInstance.post(API_URL.SIGN_IN, data);
 }
-async function signUp(data) {
-  return await axiosInstance.post(API_URL.AUTH + API_URL.SIGN_UP, data);
+async function getAllTask() {
+  return await axiosInstance.get(API_URL.TASK_LIST);
 }
 
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, Text} from 'react-native'
 import {GlobalStyles, Colors} from '../resources'
-import { moderateScale, moderateScaleVertical, textScale } from '../_helpers'
+import { moderateScale, moderateScaleVertical, textScale } from '../helper'
 
 export default function Divider({title, style}) {
   return (

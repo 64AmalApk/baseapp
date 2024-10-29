@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, Animated, StyleSheet, Dimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { moderateScale, moderateScaleVertical, textScale } from '../../_helpers';
+import { moderateScale, moderateScaleVertical, textScale } from '../../helper';
 import { Colors } from '../../resources';
 
 const { width } = Dimensions.get('window');
@@ -17,7 +17,7 @@ const Toast = ({
 }) => {
   const [show, setShow] = useState(visible);
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(width)).current;
+  const bounceAnim = useRef(new Animated.Value(0)).current;
 
   const animateToast = (toValue, callback) => {
     Animated.parallel([
@@ -26,29 +26,19 @@ const Toast = ({
         duration: 300,
         useNativeDriver: true,
       }),
-      Animated.timing(slideAnim, {
-        toValue: toValue === 1 ? 0 : width,
-        duration: 300,
+      Animated.spring(bounceAnim, {
+        toValue: toValue === 1 ? 1 : 0,
+        friction: 5,
+        tension: 40,
         useNativeDriver: true,
-      }),
+      })
     ]).start(callback);
   };
 
   useEffect(() => {
     if (visible) {
       setShow(true);
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(slideAnim, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start();
+      animateToast(1);
 
       const timer = setTimeout(() => {
         hideToast();
@@ -61,18 +51,7 @@ const Toast = ({
   }, [visible, duration]);
 
   const hideToast = () => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: width,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
+    animateToast(0, () => {
       setShow(false);
       if (onHide) onHide();
     });
@@ -95,14 +74,14 @@ const Toast = ({
 
   const getBackgroundColor = () => {
     switch (type) {
-      case 'success':
-        return Colors.success;
+      case 'warn':
+        return Colors.warning;
       case 'info':
         return Colors.info;
       case 'error':
-        return Colors.danger;
+        return Colors.error;
       default:
-        return Colors.warning;
+        return Colors.success;
     }
   };
 
@@ -112,7 +91,14 @@ const Toast = ({
         styles.toastContainer,
         {
           opacity: fadeAnim,
-          transform: [{ translateX: slideAnim }],
+          transform: [
+            {
+              scale: bounceAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0.5, 1]
+              })
+            }
+          ],
           backgroundColor: getBackgroundColor(),
         },
       ]}>
@@ -135,11 +121,10 @@ const Toast = ({
 const styles = StyleSheet.create({
   toastContainer: {
     position: 'absolute',
+    alignSelf: 'center',
     top: moderateScaleVertical(20),
-    right: 0,
-    width: '90%',
-    borderTopLeftRadius: moderateScale(8),
-    borderBottomLeftRadius: moderateScale(8),
+    width: '80%',
+    borderRadius: moderateScale(50),
     padding: moderateScale(12),
     elevation: 5,
     shadowColor: '#000',
