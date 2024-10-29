@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Button, Spacer } from '../../../components';
+import { Button, Header, Spacer } from '../../../components';
 import { moderateScale, textScale } from '../../../helper';
 import { Colors } from '../../../resources';
 
 const DraftScreen = () => {
   return (
     <View style={styles.container}>
+                  <Header title={'let start'}/>
       <Text style={styles.title}>DraftScreen Screen</Text>
       <Spacer height={20} />
       <Text style={styles.description}>
@@ -26,8 +27,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.white,
     padding: moderateScale(16),
-    justifyContent: 'center',
-    alignItems: 'center'
   },
   title: {
     fontSize: textScale(24),

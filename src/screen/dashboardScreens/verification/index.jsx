@@ -1,21 +1,66 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, FlatList } from 'react-native';
 import { Colors } from '../../../resources';
-import { Button, Spacer } from '../../../components';
+import { Header, SubHeader } from '../../../components';
 import { moderateScale, textScale } from '../../../helper';
+import authService from '../../../services/auth.service';
+import { Card, Text, Surface } from 'react-native-paper';
+import { useFocusEffect } from '@react-navigation/native';
 
 const VerificationScreen = () => {
+  const [tasks, setTasks] = useState([]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchTasks();
+    }, [])
+  );
+
+  const fetchTasks = async () => {
+    try {
+      const response = await authService.getAllTask();
+      const draftTasks = response.data.data.filter(task => task.status === 'Draft');
+      setTasks(draftTasks);
+    } catch (error) {
+      console.log('Error fetching tasks:', error);
+    }
+  };
+
+  const renderTaskCard = ({ item }) => (
+    <Card style={styles.card} mode="elevated">
+      <Card.Content>
+        <View style={styles.cardHeader}>
+          <Text variant="titleLarge" style={styles.bankName}>{item.bankName.toUpperCase()}</Text>
+          <Text variant="titleMedium" style={styles.product}>{item.product}</Text>
+        </View>
+        
+        <Surface style={styles.cardBody}>
+          <Text style={styles.label}>Applicant: <Text style={styles.value}>{item.applicantName}</Text></Text>
+          <Text style={styles.label}>Contact: <Text style={styles.value}>{item.contactNumber}</Text></Text>
+          <Text style={styles.label}>Address: <Text style={styles.value}>{item.address}</Text></Text>
+          <Text style={styles.label}>Assign Date: <Text style={styles.value}>{item.assignDate}</Text></Text>
+          <Text style={styles.label}>Trigger: <Text style={styles.value}>{item.trigger}</Text></Text>
+          <Text style={styles.label}>Status: <Text style={styles.value}>{item.status}</Text></Text>
+        </Surface>
+
+        <View style={styles.cardFooter}>
+          <Text style={styles.label}>Verifier: <Text style={styles.value}>{item.verifierNameOrId}</Text></Text>
+          <Text style={styles.label}>Team Leader: <Text style={styles.value}>{item.teamLeaderOrId}</Text></Text>
+        </View>
+      </Card.Content>
+    </Card>
+  );
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>VerificationScreen Screen</Text>
-      <Spacer height={20} />
-      <Text style={styles.description}>
-        This is a demo pending screen. You can customize it according to your needs.
-      </Text>
-      <Spacer height={40} />
-      <Button 
-        title="Demo Button"
-        onPress={() => {}}
+      <Header title={'let start'}/>
+      <SubHeader />
+      <FlatList
+        data={tasks}
+        renderItem={renderTaskCard}
+        keyExtractor={item => item._id}
+        contentContainerStyle={styles.listContainer}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
@@ -25,19 +70,48 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-    padding: moderateScale(16),
-    justifyContent: 'center',
-    alignItems: 'center'
   },
-  title: {
-    fontSize: textScale(24),
-    color: Colors.black,
-    textAlign: 'center'
+  listContainer: {
+    padding: moderateScale(16)
   },
-  description: {
-    fontSize: textScale(16),
-    color: Colors.grey,
-    textAlign: 'center'
+  card: {
+    marginBottom: moderateScale(16),
+    backgroundColor: Colors.primary,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: moderateScale(10),
+  },
+  bankName: {
+    fontWeight: 'bold',
+    color: Colors.white,
+  },
+  product: {
+    color: Colors.white,
+    fontWeight: '500',
+  },
+  cardBody: {
+    borderBottomWidth: 1,
+    borderTopWidth: 1,
+    borderColor: Colors.white + '20',
+    paddingVertical: moderateScale(10),
+    backgroundColor: Colors.primary,
+  },
+  cardFooter: {
+    marginTop: moderateScale(10),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  label: {
+    fontSize: textScale(14),
+    color: Colors.white,
+    marginBottom: moderateScale(5),
+  },
+  value: {
+    color: Colors.white,
+    fontWeight: '500',
   }
 });
 

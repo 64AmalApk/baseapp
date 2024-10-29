@@ -31,7 +31,7 @@ const CustomTabBar = ({state, descriptors, navigation}) => {
       name={icon}
       origin={origin}
       size={textScale(25)}
-      color={isFocused ? Colors.primary : Colors.black}
+      color={isFocused ? Colors.warning : '#a57e0b'}
     />
   );
 
@@ -69,12 +69,13 @@ const CustomTabBar = ({state, descriptors, navigation}) => {
               accessibilityState={isFocused ? {selected: true} : {}}
               onPress={onPress}
               onLongPress={onLongPress}
-              style={isFocused ? styles.tabActive : styles.tab}>
-              <View style={isFocused ? styles.activeTab : styles.inactiveTab}>
+              style={[styles.tab, isFocused && styles.tabActive]}>
+              <View style={[styles.tabContent, isFocused && styles.activeTab]}>
                 {renderIcon(tabConfig.icon, tabConfig.origin, isFocused)}
                 <Text style={[styles.label, isFocused && styles.activeLabel]}>
                   {tabConfig?.title}
                 </Text>
+                {isFocused && <View style={styles.activeLine} />}
               </View>
             </TouchableOpacity>
           );
@@ -90,36 +91,56 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     flexDirection: 'row',
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.primary,
     height: moderateScale(70),
     justifyContent: 'space-between',
     alignItems: 'center',
     borderTopWidth: 0,
-    width: '95%',
+    width: '100%',
     marginHorizontal: 'auto',
-    paddingHorizontal: moderateScale(10),
+    // paddingHorizontal: moderateScale(10),
   },
-  tab: {},
-  tabActive: {},
+  tab: {
+    flex: 1,
+    height: moderateScale(70),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tabContent: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  tabActive: {
+    backgroundColor: Colors.primary,
+  },
   inactiveTab: {
-    height: moderateScale(50),
-    width: moderateScale(60),
     alignItems: 'center',
     justifyContent: 'center',
   },
   activeTab: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: moderateScale(50),
-    width: moderateScale(60),
+  },
+  activeLine: {
+    position: 'absolute',
+    bottom: moderateScale(-10),
+    width: moderateScale(70),
+    height: 3,
+    backgroundColor: Colors.white,
+    borderRadius: 2,
+    marginBottom: 4
   },
   activeLabel: {
-    // color: Colors.primary,
+    color: Colors.warning,
   },
   label: {
-    fontSize: textScale(10),
-    color: '#14213d',
+    fontSize: textScale(12),
+    color: Colors.white,
     marginTop: moderateScale(4),
+    fontWeight: '500',
+    textAlign: 'center',
   },
 });
 

@@ -2,6 +2,8 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ROUTE_NAME } from '../helper';
 import { Draft, Pending, Verification } from '../screen';
+import { Colors } from '../resources';
+import { CustomTabBar } from '../components';
 // import { CustomTabBar } from '../components';
 
 const Tab = createBottomTabNavigator();
@@ -10,7 +12,7 @@ export default function MainTabNavigator() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.primary,
+        tabBarActiveTintColor: Colors.primary,
         tabBarInactiveTintColor: '#41484e',
       }}
     tabBar={props => <CustomTabBar {...props} />}

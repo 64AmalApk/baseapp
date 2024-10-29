@@ -5,6 +5,8 @@ const API_URL = {
     SIGN_IN: "login-field-excutive",
     SIGN_UP: "auth/signUp",
 
+    TASK_LIST:'get-all-task'
+
 
 };
 
