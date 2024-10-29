@@ -85,11 +85,7 @@ android {
         versionCode 1
         versionName "1.0"
     }
-     externalNativeBuild {
-            cmake {
-                version "3.18.1" // Or the latest compatible version for React Native
-            }
-        }
+
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
