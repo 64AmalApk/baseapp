@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-    padding: moderateScale(16),
   },
   title: {
     fontSize: textScale(24),
