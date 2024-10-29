@@ -8,7 +8,7 @@ const authService = {
 
 
 async function signIn(data) {
-  return await axiosInstance.post(API_URL.AUTH + API_URL.SIGN_IN, data);
+  return await axiosInstance.post(API_URL.SIGN_IN, data);
 }
 async function signUp(data) {
   return await axiosInstance.post(API_URL.AUTH + API_URL.SIGN_UP, data);

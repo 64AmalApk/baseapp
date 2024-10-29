@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Modal, Image, StyleSheet} from 'react-native';
 import {Button, CustomText} from '../../components';
 import { Colors } from '../../resources';
-import {  moderateScale, moderateScaleVertical, textScale } from '../../_helpers';
+import {  moderateScale, moderateScaleVertical, textScale } from '../../helper';
 
 
 const AlertModal = ({visible, image, title, description, onCancel, onOkay}) => {

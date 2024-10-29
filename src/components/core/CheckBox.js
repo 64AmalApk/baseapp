@@ -2,8 +2,8 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Colors, Fonts } from '../../resources';
-import { moderateScale, moderateScaleVertical, textScale } from '../../_helpers';
+import { Colors } from '../../resources';
+import { moderateScale, moderateScaleVertical, textScale } from '../../helper';
 
 const Checkbox = ({ label, checked, onPress, labelStyle, containerStyle }) => {
   return (
@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
     marginLeft: moderateScale(8),
     fontSize: textScale(16),
     color: Colors.text,
-    fontFamily: Fonts.regular,
   },
 });
 

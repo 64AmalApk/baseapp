@@ -1,61 +1,148 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Colors } from '../../../resources';
+import { useForm, Controller } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Colors, Images } from '../../../resources';
 import { moderateScale, textScale, moderateScaleVertical, ROUTE_NAME } from '../../../helper';
-import { navigationService } from '../../../services';
+import { Button, Input, Spacer } from '../../../components';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import FastImage from 'react-native-fast-image';
+import { TextInput } from 'react-native-paper';
+import { useAppContext } from '../../../_customContext/AppProvider';
+import { authService } from '../../../services';
+import { useDispatch } from 'react-redux';
+import { login } from '../../../store/_reducers/auth';
 
-const SignInScreen = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const schema = yup.object().shape({
+  email: yup.string().email('Invalid email').required('Email is required'),
+  password: yup.string().min(4, 'Password must be at least 4 characters').required('Password is required'),
+});
 
-  const handleSignIn = () => {
-    // Handle sign in logic here
+const SignInScreen = ({navigation}) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { showToast, showLoader, hideLoader } = useAppContext()
+  const dispatch = useDispatch()
+  const { control, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      email: 'satyam123@gmail.com',
+      password: 'Satyam@2207'
+    }
+  });
+
+  const handleSignIn = async (data) => {
+    try {
+      setIsLoading(true);
+      // showLoader();
+      const response = await authService.signIn(data)
+      showToast('Successfully logged in');
+      dispatch(login(response.data))
+      navigation.replace(ROUTE_NAME.DASHBOARD)
+    } catch (error) {
+      showToast(error.message || 'Sign in failed', 'error');
+    } finally {
+      hideLoader();
+      showToast('logged in feaild ', 'error');
+      setIsLoading(false);
+    }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Sign In</Text>
-      </View>
-
-      <View style={styles.content}>
-        <Text style={styles.welcomeText}>Welcome Back!</Text>
-        <Text style={styles.subText}>Please sign in to continue</Text>
-
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        enableAutomaticScroll={(Platform.OS === 'ios')}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        extraHeight={130} extraScrollHeight={130}
+      >
+        <View style={styles.imageContainer}>
+          <FastImage
+            source={Images.login}
+            style={styles.image}
+            resizeMode={FastImage.resizeMode.contain}
           />
         </View>
-
-        <TouchableOpacity style={styles.forgotPassword}>
-          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
-          <Text style={styles.signInButtonText}>Sign In</Text>
-        </TouchableOpacity>
-
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Don't have an account? </Text>
-          <TouchableOpacity onPress={navigationService.navigate(ROUTE_NAME.SIGNUP)}>
-            <Text style={styles.signUpText}>Sign Up</Text>
-          </TouchableOpacity>
+        <View>
+          <Text style={[styles.welcomeText, { fontSize: textScale(38) }]}> URMS</Text>
         </View>
-      </View>
+        <View style={styles.content}>
+          <Text style={styles.welcomeText}>Welcome Back!</Text>
+
+          <View style={styles.inputContainer}>
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, value } }) => (
+                <TextInput
+                  label="Email"
+                  placeholder="Enter your email"
+                  onChangeText={onChange}
+                  value={value}
+                  error={errors.email?.message}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  style={styles.input}
+                  mode="outlined"
+                  outlineStyle={styles.inputOutline}
+                  outlineColor={Colors.primary}
+                  activeOutlineColor={Colors.primary}
+                  left={<TextInput.Icon icon="email" color={Colors.primary} />}
+                />
+              )}
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, value } }) => (
+                <TextInput
+                  label="Password"
+                  placeholder="Enter your password"
+                  onChangeText={onChange}
+                  value={value}
+                  error={errors.password?.message}
+                  secureTextEntry={!showPassword}
+                  style={styles.input}
+                  mode="outlined"
+                  outlineStyle={styles.inputOutline}
+                  outlineColor={Colors.primary}
+                  activeOutlineColor={Colors.primary}
+                  left={<TextInput.Icon icon="lock" color={Colors.primary} />}
+                  right={
+                    <TextInput.Icon
+                      icon={showPassword ? "eye-off" : "eye"}
+                      color={Colors.primary}
+                      onPress={() => setShowPassword(!showPassword)}
+                    />
+                  }
+                />
+              )}
+            />
+          </View>
+
+          <Button
+            title="Sign In"
+            style={[styles.signInButton]}
+            textStyle={styles.signInButtonText}
+            onPress={handleSubmit(handleSignIn)}
+            isDisabled={isLoading}
+            showLoader={isLoading}
+          />
+          <View style={styles.forgotPasswordContainer}>
+            <TouchableOpacity disabled={isLoading}>
+              <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+            </TouchableOpacity>
+          </View>
+
+        </View>
+
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -63,79 +150,73 @@ const SignInScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.primary,
   },
-  header: {
-    padding: moderateScale(20),
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+  imageContainer: {
+    height: moderateScale(350),
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: moderateScale(20),
   },
-  headerTitle: {
-    fontSize: textScale(24),
-    fontWeight: 'bold',
-    color: Colors.text,
+  image: {
+    width: '90%',
+    height: '100%',
+    resizeMode: 'contain',
   },
   content: {
     flex: 1,
+    backgroundColor: Colors.white,
+    borderTopLeftRadius: moderateScale(30),
+    borderTopRightRadius: moderateScale(30),
     padding: moderateScale(20),
-    justifyContent: 'center',
+    paddingTop: moderateScale(25),
   },
   welcomeText: {
     fontSize: textScale(28),
     fontWeight: 'bold',
-    color: Colors.primary,
-    marginBottom: moderateScaleVertical(10),
-  },
-  subText: {
-    fontSize: textScale(16),
-    color: Colors.textGray,
+    color: Colors.warning,
     marginBottom: moderateScaleVertical(30),
+    textAlign: 'center',
   },
   inputContainer: {
     marginBottom: moderateScaleVertical(20),
   },
   input: {
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: moderateScale(8),
-    padding: moderateScale(15),
-    marginBottom: moderateScaleVertical(15),
-    fontSize: textScale(16),
+    backgroundColor: Colors.white,
+    borderRadius: moderateScale(50),
   },
-  forgotPassword: {
-    alignSelf: 'flex-end',
-    marginBottom: moderateScaleVertical(20),
-  },
-  forgotPasswordText: {
-    color: Colors.secondary,
-    fontSize: textScale(14),
+  inputOutline: {
+    borderRadius: moderateScale(50),
   },
   signInButton: {
     backgroundColor: Colors.primary,
     padding: moderateScale(15),
-    borderRadius: moderateScale(8),
+    borderRadius: moderateScale(50),
     alignItems: 'center',
     marginBottom: moderateScaleVertical(20),
+    elevation: 3,
+    shadowColor: Colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   signInButtonText: {
     color: Colors.white,
     fontSize: textScale(16),
     fontWeight: 'bold',
   },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+  forgotPasswordContainer: {
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  footerText: {
-    fontSize: textScale(14),
-    color: Colors.textGray,
-  },
-  signUpText: {
-    fontSize: textScale(14),
+  forgotPasswordText: {
     color: Colors.primary,
-    fontWeight: 'bold',
-  },
+    fontSize: textScale(15),
+    fontWeight: '600',
+  }
 });
 
 export default SignInScreen;

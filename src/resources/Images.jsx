@@ -1,6 +1,7 @@
 const Images = {
-    splace: require('../assets/splash.png'),
-    demoUser: require('../assets/demoUser.png')
+    splash: require('../assets/splash.jpg'),
+    demoUser: require('../assets/demoUser.png'),
+    login: require('../assets/login.png')
 }
 
 export default Images;

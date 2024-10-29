@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Colors, GlobalStyles } from '../../resources';
-import { textScale, moderateScale, moderateScaleVertical, ICON_TYPE } from '../../_helpers';
+import { textScale, moderateScale, moderateScaleVertical, ICON_TYPE } from '../../helper';
 import CustomIcon from '../CustomIcon';
 
 const Input = ({

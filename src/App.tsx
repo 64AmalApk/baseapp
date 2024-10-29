@@ -16,6 +16,7 @@ import AppNavigator from './navigation';
 import { Colors } from './resources';
 import { PaperProvider } from 'react-native-paper';
 import { persistor, store } from './store';
+import { AppProvider } from './_customContext/AppProvider';
 
 
 function App() {
@@ -29,9 +30,9 @@ function App() {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 1 }}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                  {/* <AppProvider> */}
+                  <AppProvider>
                       <AppNavigator />
-                  {/* </AppProvider> */}
+                  </AppProvider>
                 </TouchableWithoutFeedback>
               </KeyboardAvoidingView>
             </SafeAreaView>

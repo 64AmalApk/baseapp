@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, View, ActivityIndicator } from 'react-native';
-import { Colors, Fonts } from '../../resources';
-import { moderateScale, moderateScaleVertical, textScale } from '../../_helpers';
+import { Colors } from '../../resources';
+import { moderateScale, moderateScaleVertical, textScale } from '../../helper';
 import CustomIcon from '../CustomIcon';
 
 const Button = ({ title, onPress, style, textStyle, iconName, iconType, iconSize = 18, iconColor = Colors.white, isDisabled = false, showLoader = false }) => {
@@ -13,7 +13,7 @@ const Button = ({ title, onPress, style, textStyle, iconName, iconType, iconSize
       disabled={isDisabled}>
       <View style={styles.contentContainer}>
         {showLoader ? (
-          <ActivityIndicator size="small" color={Colors.white} style={styles.loader} />
+          <ActivityIndicator  color={Colors.white} size={textScale(22)} style={styles.loader} />
         ) : (
           <>
             {iconName && (
@@ -56,7 +56,6 @@ const styles = StyleSheet.create({
     fontSize: textScale(16),
     color: Colors.white,
     fontWeight: '600',
-    fontFamily: Fonts.semiBold,
   },
   icon: {
     marginRight: moderateScale(8),

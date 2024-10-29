@@ -7,7 +7,7 @@ import {
   Text,
 } from 'react-native';
 import { Colors, Images } from '../../resources';
-import { moderateScaleVertical, moderateScale, textScale } from '../../_helpers';
+import { moderateScaleVertical, moderateScale, textScale } from '../../helper';
 import { ActivityIndicator } from 'react-native-paper';
 
 const Loader = ({visible}) => (
