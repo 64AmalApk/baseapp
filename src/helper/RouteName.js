@@ -4,11 +4,11 @@ export const ROUTE_NAME = {
     SIGNIN: 'signIn',
     DASHBOARD : "dashboard",
 
-    HOME: 'home',
-    PROFILE: "profile",
 
     DRAFT: 'draft',
     PENDING: 'pending', 
     VERIFICATION: 'verification',
+
+    PROFILE_FORM : "profileFrom"
 
 };

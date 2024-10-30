@@ -38,7 +38,7 @@ const SubHeader = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.primaryBg,
     paddingVertical: moderateScale(12),
     paddingHorizontal: moderateScale(20),
     borderRadius: moderateScale(35),

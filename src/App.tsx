@@ -17,7 +17,7 @@ import { Colors } from './resources';
 import { PaperProvider } from 'react-native-paper';
 import { persistor, store } from './store';
 import { AppProvider } from './_customContext/AppProvider';
-
+import { TaskProvider } from './_customContext/TaskContext';
 
 function App() {
   return (
@@ -31,7 +31,9 @@ function App() {
                 style={{ flex: 1 }}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                   <AppProvider>
+                    <TaskProvider>
                       <AppNavigator />
+                    </TaskProvider>
                   </AppProvider>
                 </TouchableWithoutFeedback>
               </KeyboardAvoidingView>

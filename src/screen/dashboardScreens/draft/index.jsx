@@ -1,23 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Button, Header, Spacer } from '../../../components';
+import { Button, Header, NoDataFound, Spacer, SubHeader } from '../../../components';
 import { moderateScale, textScale } from '../../../helper';
 import { Colors } from '../../../resources';
 
 const DraftScreen = () => {
   return (
     <View style={styles.container}>
-                  <Header title={'let start'}/>
-      <Text style={styles.title}>DraftScreen Screen</Text>
-      <Spacer height={20} />
-      <Text style={styles.description}>
-        This is a demo pending screen. You can customize it according to your needs.
-      </Text>
-      <Spacer height={40} />
-      <Button 
-        title="Demo Button"
-        onPress={() => {}}
-      />
+      <Header title={'let start '}/>
+      <SubHeader />
+      <NoDataFound />
     </View>
   );
 };
